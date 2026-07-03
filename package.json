@@ -1,0 +1,14 @@
+{
+  "name": "rota-scheduler-online",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

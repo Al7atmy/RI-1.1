@@ -1,0 +1,18 @@
+{
+  "name": "Residents Tools",
+  "short_name": "Residents Tools",
+  "description": "Residents scheduling, rounds, and clinical calculator tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090b",
+  "theme_color": "#07090b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

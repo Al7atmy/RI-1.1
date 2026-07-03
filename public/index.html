@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07090b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Residents Tools" />
+    <title>Residents Tools</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <link rel="stylesheet" href="/styles.css?v=19" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="loginView" class="login-view">
+        <div class="login-card">
+          <div class="login-brand">
+            <div class="app-name">Residents Tools</div>
+          </div>
+          <label>
+            Username
+            <input id="authUsername" autocomplete="username" />
+          </label>
+          <label>
+            Password
+            <input id="authPassword" type="password" autocomplete="current-password" />
+          </label>
+          <div class="auth-actions">
+            <button id="loginBtn" class="primary" type="button">Login</button>
+            <button id="signupBtn" class="ghost" type="button">Sign Up</button>
+          </div>
+          <button id="guestLoginBtn" class="guest-button" type="button">Continue as Guest</button>
+          <div id="authMessage" class="auth-message"></div>
+          <div class="login-credit">
+            <strong>Done by Dr Othman</strong>
+            <span>For clinical support only. Use at your own risk; verify all results independently and follow local policy and senior clinical judgment.</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="homeView" class="home-view hidden">
+        <div class="home-hero">
+          <h1>Residents Tools</h1>
+          <p>Choose a workflow.</p>
+        </div>
+        <div class="tool-grid">
+          <button class="tool-card" data-open-view="schedulerView">
+            <span>Scheduler</span>
+            <small>Make ROTA schedule and Excel sheets</small>
+          </button>
+          <button class="tool-card" data-open-view="roundsView">
+            <span>Rounds</span>
+            <small>Collect patients, round, plan, and track work</small>
+          </button>
+          <button class="tool-card" data-open-view="calculatorView">
+            <span>Calculator</span>
+            <small>ABG, stroke, thrombosis, iron, TSAT, and kidney tools</small>
+          </button>
+          <button id="adminToolCard" class="tool-card hidden" data-open-view="adminView">
+            <span>Admin Panel</span>
+            <small>Approve users and review account access</small>
+          </button>
+        </div>
+        <button id="logoutBtn" class="logout-button" type="button">Logout</button>
+        <div class="home-credit">
+          <strong>Done by Dr Othman</strong>
+          <span>For clinical support only. Use at your own risk; verify all results independently and follow local policy and senior clinical judgment.</span>
+        </div>
+      </section>
+
+      <section id="schedulerView" class="app-view hidden">
+      <section class="topbar">
+        <div>
+          <h1>ROTA Scheduler</h1>
+          <p>Build the same four-sheet on-call workbook from names, rules, requests, and helper coverage.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost" data-open-view="homeView">Home</button>
+          <button id="generateBtn" class="primary">Do The Schedule</button>
+        </div>
+      </section>
+
+      <section class="layout scheduler-layout">
+        <aside class="panel controls">
+          <div class="step-card">
+            <div class="step-heading">
+              <span>Step 1</span>
+              <div>
+                <h2>Rota Details</h2>
+                <p>Set name, dates, and reusable template.</p>
+              </div>
+            </div>
+            <label>
+              Rota name
+              <input id="rotaName" placeholder="ROTA name" />
+            </label>
+            <div class="two">
+              <label>
+                Start
+                <input id="startDate" type="date" />
+              </label>
+              <label>
+                End
+                <input id="endDate" type="date" />
+              </label>
+            </div>
+            <div class="template-box compact-box">
+              <div class="section-title">
+                <h2>Templates</h2>
+                <button id="saveTemplateBtn" class="ghost" type="button">Save</button>
+              </div>
+              <label>
+                Saved rota template
+                <select id="templateSelect"></select>
+              </label>
+              <div class="template-actions">
+                <button id="loadTemplateBtn" class="ghost" type="button">Load</button>
+                <button id="deleteTemplateBtn" class="remove" type="button">Delete</button>
+              </div>
+            </div>
+            <button id="emptyBtn" class="secondary action-button" type="button">Refresh Empty Preview</button>
+          </div>
+
+          <div class="step-card layout-editor">
+            <div class="step-heading">
+              <span>Step 2</span>
+              <div>
+                <h2>Schedule Layout</h2>
+                <p>Edit columns for another specialty.</p>
+              </div>
+            </div>
+            <div class="layout-actions">
+              <button id="addLayoutShiftBtn" class="ghost" type="button" onclick="window.residentToolsAddLayoutShift?.()">Add Shift Column</button>
+              <button id="resetLayoutBtn" class="ghost" type="button">Default Layout</button>
+            </div>
+            <div class="column-toggle-box">
+              <div class="column-toggle-title">
+                <strong>Remove Existing Columns</strong>
+                <span>Uncheck a column to remove it from preview and Excel.</span>
+              </div>
+              <label class="mini-check"><input id="showWeekendColumn" type="checkbox" checked />Weekend column</label>
+              <label class="mini-check"><input id="showNotesColumn" type="checkbox" checked />Notes column</label>
+            </div>
+            <div id="layoutRows" class="layout-rows"></div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-heading">
+              <span>Step 3</span>
+              <div>
+                <h2>Residents And Rules</h2>
+                <p>Add residents, helpers, restrictions, and special requests.</p>
+              </div>
+            </div>
+            <label>
+              Male residents
+              <textarea id="males" placeholder="One name per line"></textarea>
+            </label>
+            <label>
+              Female residents
+              <textarea id="females" placeholder="One name per line"></textarea>
+            </label>
+            <label>
+              Weekend helpers
+              <textarea id="helpers" placeholder="Resident names"></textarea>
+            </label>
+            <label>
+              Family residents
+              <textarea id="familyResidents" placeholder="Resident names"></textarea>
+            </label>
+            <label>
+              Extra weekday workload
+              <textarea id="extraWeekday" placeholder="Resident names"></textarea>
+            </label>
+            <div class="section-title request-title">
+              <h2>Special Requests</h2>
+              <button id="addRequest" class="ghost" type="button">Add</button>
+            </div>
+            <div id="requests"></div>
+            <button id="reviewBtn" class="secondary action-button" type="button">Ask AI Review</button>
+          </div>
+        </aside>
+
+        <section class="workspace">
+          <nav class="tabs" aria-label="Workbook sheets">
+            <button class="tab active" data-tab="schedule">Schedule</button>
+            <button class="tab" data-tab="referral">Referral</button>
+            <button class="tab" data-tab="workload">Workload</button>
+            <button class="tab" data-tab="checks">Double Check</button>
+          </nav>
+
+          <div class="panel output">
+            <div class="sheet-toolbar">
+              <div id="statusText">Empty schedule ready.</div>
+              <a id="downloadLink" class="download hidden" href="#">Download Excel</a>
+            </div>
+            <div id="aiBox" class="ai-box hidden"></div>
+            <div id="sheetWrap" class="sheet-wrap"></div>
+          </div>
+        </section>
+      </section>
+      </section>
+
+      <section id="roundsView" class="app-view hidden">
+        <section class="topbar rounds-topbar">
+          <div>
+            <h1>Rounds</h1>
+            <p>Quick patient list, plan by category, and round timer.</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-open-view="homeView">Home</button>
+            <button id="addPatientBtn" class="primary">Add Patient</button>
+          </div>
+        </section>
+
+        <section class="rounds-layout">
+          <aside class="panel rounds-panel">
+            <div class="section-title">
+              <h2>Patients</h2>
+              <button id="clearRoundsBtn" class="ghost">Clear</button>
+            </div>
+            <div id="patientList" class="patient-list"></div>
+            <div class="section-title history-title">
+              <h2>History</h2>
+              <button id="clearHistoryBtn" class="ghost">Clear</button>
+            </div>
+            <div id="roundHistoryList" class="history-list"></div>
+          </aside>
+
+          <section class="panel rounds-workspace">
+            <div class="rounds-actions">
+              <button id="startRoundBtn" class="primary">Start Round</button>
+              <button id="endRoundBtn" class="secondary">End Round</button>
+              <button id="doneAllBtn" class="done-button">Done All</button>
+              <div id="saveIndicator" class="save-indicator">Saved</div>
+              <div id="roundTimer" class="round-timer">00:00:00</div>
+            </div>
+            <div id="roundPatientView" class="round-patient-view">
+              <div class="empty-state">Select a patient to view details and add the plan.</div>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section id="calculatorView" class="app-view hidden">
+        <section class="topbar">
+          <div>
+            <h1>Calculator</h1>
+            <p>Clinical calculators for quick bedside use.</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-open-view="homeView">Home</button>
+          </div>
+        </section>
+
+        <section class="panel calculator-shell">
+          <nav class="calc-tabs" aria-label="Clinical calculators">
+            <button class="calc-tab active" data-calculator="abg">Blood Gas</button>
+            <button class="calc-tab" data-calculator="abcd2">ABCD2</button>
+            <button class="calc-tab" data-calculator="ganzoni">Ganzoni</button>
+            <button class="calc-tab" data-calculator="tsat">TSAT</button>
+            <button class="calc-tab" data-calculator="nihss">NIHSS</button>
+            <button class="calc-tab" data-calculator="wellsDvt">Wells DVT</button>
+            <button class="calc-tab" data-calculator="wellsPe">Wells PE</button>
+            <button class="calc-tab" data-calculator="gfr">GFR</button>
+            <button class="calc-tab" data-calculator="crcl">CrCl</button>
+            <button class="calc-tab" data-calculator="vanco">Vancomycin</button>
+            <button class="calc-tab" data-calculator="heparin">Heparin</button>
+            <button class="calc-tab" data-calculator="insulin">Insulin</button>
+          </nav>
+          <div id="calculatorContent" class="calculator-content"></div>
+        </section>
+      </section>
+
+      <section id="adminView" class="app-view hidden">
+        <section class="topbar">
+          <div>
+            <h1>Admin Panel</h1>
+            <p>Approve new users before they can access the app.</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-open-view="homeView">Home</button>
+            <button id="refreshUsersBtn" class="primary" type="button">Refresh</button>
+          </div>
+        </section>
+        <section class="panel admin-panel">
+          <div id="adminUserList" class="admin-user-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <template id="requestTemplate">
+      <div class="request-row">
+        <label>
+          Resident
+          <input class="req-name" placeholder="Resident name" />
+        </label>
+        <label>
+          Avoid dates
+          <textarea class="req-dates" placeholder="2026-07-16&#10;2026-07-17"></textarea>
+        </label>
+        <label>
+          Avoid shift rules
+          <textarea class="req-shifts" placeholder="2026-07-25 Night"></textarea>
+        </label>
+        <button class="remove" type="button">Remove</button>
+      </div>
+    </template>
+    <div id="patientWizard" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="section-title">
+          <h2 id="wizardTitle">Add Patient</h2>
+          <button id="closeWizardBtn" class="ghost">Close</button>
+        </div>
+        <p id="wizardQuestion" class="wizard-question"></p>
+        <input id="wizardInput" />
+        <div class="wizard-actions">
+          <button id="wizardSkipBtn" class="ghost">Skip</button>
+          <button id="wizardNextBtn" class="primary">Next</button>
+        </div>
+      </div>
+    </div>
+    <div id="roundSummaryModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card summary-card">
+        <div class="section-title">
+          <h2 id="summaryTitle">Round Summary</h2>
+          <button id="closeSummaryBtn" class="ghost">Close</button>
+        </div>
+        <div id="roundSummaryContent" class="summary-content"></div>
+      </div>
+    </div>
+    <div id="editPatientModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card edit-card">
+        <div class="section-title">
+          <h2>Edit Patient</h2>
+          <button id="closeEditPatientBtn" class="ghost" type="button">Close</button>
+        </div>
+        <div class="edit-grid">
+          <label>MRN<input id="editMrn" /></label>
+          <label>Name<input id="editName" /></label>
+          <label>Location / room<input id="editLocation" /></label>
+          <label>Admission cause<textarea id="editAdmissionCause"></textarea></label>
+          <label>Summary<textarea id="editSummary"></textarea></label>
+          <label>Active issue<textarea id="editActiveIssue"></textarea></label>
+        </div>
+        <div class="wizard-actions">
+          <button id="savePatientInfoBtn" class="primary" type="button">Save Patient</button>
+        </div>
+      </div>
+    </div>
+    <script src="/app.js?v=19" type="module"></script>
+  </body>
+</html>
